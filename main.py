@@ -1,42 +1,42 @@
 import os
 from telethon.sync import TelegramClient
 
+# =========================
+# SESSION FOLDER SETUP
+# =========================
 SESSION_DIR = "sessions"
 
 if not os.path.exists(SESSION_DIR):
     os.makedirs(SESSION_DIR)
 
-
 # =========================
-# LOGIN SYSTEM
+# LOGIN INPUT
 # =========================
 api_id = input("Enter API ID: ")
 api_hash = input("Enter API HASH: ")
-phone = input("Enter Phone Number: ")
+phone = input("Enter Phone Number (+880...): ")
 
-# session name input (multi-account support)
-session_name = input("Session Name (example: account1): ")
-
+session_name = input("Session Name (example: acc1): ")
 session_path = os.path.join(SESSION_DIR, session_name)
 
+# =========================
+# TELEGRAM CLIENT
+# =========================
 client = TelegramClient(session_path, api_id, api_hash)
 
-print("\n🔄 Checking session...")
+print("\n🔄 Starting login...")
 
-# =========================
-# START LOGIN
-# =========================
 client.start(phone=phone)
 
-print("✅ Login Successful!")
+print("✅ Login successful!")
 print(f"📁 Session saved: sessions/{session_name}.session")
 
 
 # =========================
-# MENU SYSTEM
+# MENU LOOP
 # =========================
 while True:
-    print("\n===== TELEGRAM CONTROL PANEL =====")
+    print("\n===== TELEGRAM CONTROL TOOL =====")
     print("[1] Promote Admin")
     print("[2] Demote Admin")
     print("[3] Ban User")
@@ -56,7 +56,7 @@ while True:
             user = input("User ID/Username: ")
 
             client.edit_admin(group, user, is_admin=True)
-            print("✅ Admin promoted!")
+            print("✅ User promoted to admin!")
 
         except Exception as e:
             print("❌ Error:", e)
@@ -66,8 +66,8 @@ while True:
     # -------------------------
     elif choice == "2":
         try:
-            group = input("Group: ")
-            user = input("User: ")
+            group = input("Group username/ID: ")
+            user = input("User ID/Username: ")
 
             client.edit_admin(group, user, is_admin=False)
             print("✅ Admin removed!")
@@ -80,8 +80,8 @@ while True:
     # -------------------------
     elif choice == "3":
         try:
-            group = input("Group: ")
-            user = input("User: ")
+            group = input("Group username/ID: ")
+            user = input("User ID/Username: ")
 
             client.kick_participant(group, user)
             print("🚫 User banned!")
@@ -94,8 +94,8 @@ while True:
     # -------------------------
     elif choice == "4":
         try:
-            group = input("Group: ")
-            user = input("User: ")
+            group = input("Group username/ID: ")
+            user = input("User ID/Username: ")
 
             client.edit_permissions(group, user, view_messages=True)
             print("✅ User unbanned!")
@@ -104,7 +104,7 @@ while True:
             print("❌ Error:", e)
 
     # -------------------------
-    # INFO
+    # MY INFO
     # -------------------------
     elif choice == "5":
         me = client.get_me()
@@ -122,36 +122,3 @@ while True:
 
     else:
         print("❌ Invalid choice")
-
-    elif choice == "2":
-        group = input("Group: ")
-        user = input("User: ")
-
-        client.edit_admin(group, user, is_admin=False)
-        print("Admin removed!")
-
-    elif choice == "3":
-        group = input("Group: ")
-        user = input("User: ")
-
-        client.kick_participant(group, user)
-        print("User banned!")
-
-    elif choice == "4":
-        group = input("Group: ")
-        user = input("User: ")
-
-        client.edit_permissions(group, user, view_messages=True)
-        print("User unbanned!")
-
-    elif choice == "5":
-        me = client.get_me()
-        print(f"\nName: {me.first_name}")
-        print(f"Username: {me.username}")
-        print(f"ID: {me.id}")
-
-    elif choice == "0":
-        break
-
-    else:
-        print("Invalid choice")
